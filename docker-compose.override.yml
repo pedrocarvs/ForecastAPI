@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  weatherforecast.api:
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    ports:
+      - "80"
+      - "443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  db:
+    image: mysql:8.0.34
+    container_name: forecast-mysql
+    restart: always
+    volumes:
+      - ./obj/mysql:/var/lib/mysql
+    ports:
+      - "3335:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_PASSWORD=password
+      - MYSQL_USER=user
+      - MYSQL_HOST=%
+      - MYSQL_DATABASE=Forecast

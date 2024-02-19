@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  weatherforecast.api:
+    image: ${DOCKER_REGISTRY-}weatherforecastapi
+    build:
+      context: .
+      dockerfile: WebForecast.Api/Dockerfile
