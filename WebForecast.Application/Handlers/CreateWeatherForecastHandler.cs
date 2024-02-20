@@ -21,7 +21,7 @@ namespace WeatherForecast.Application.Handlers
 
         public async Task<CreateWeatherForecastResponse> Handle(CreateWeatherForecastRequest request, CancellationToken cancellationToken)
         {
-           return await _service.CreateForecast(request.Date, request.Temperature, cancellationToken);
+           return await _service.Create(request.Date, request.Temperature, f => f.Create(), cancellationToken);
         }
     }
 }

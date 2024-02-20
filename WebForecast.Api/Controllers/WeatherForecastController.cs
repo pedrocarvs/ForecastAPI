@@ -1,9 +1,7 @@
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WeatherForecast.Application.Handlers;
-using WeatherForecast.Domain.Entities;
-using WeatherForecast.Domain.Repositories;
+
 
 namespace WeatherForecast.Api.Controllers
 {
@@ -19,7 +17,7 @@ namespace WeatherForecast.Api.Controllers
 
         [HttpPost]
         [Route("AddWeatherForecast")]
-        public async Task<ActionResult<Guid>> AddWeatherForecast(CreateWeatherForecastRequest forecast)
+        public ActionResult<Guid> AddWeatherForecast(CreateWeatherForecastRequest forecast)
         {
             try
             {
@@ -32,9 +30,24 @@ namespace WeatherForecast.Api.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("DeleteWeatherForecast")]
+        public ActionResult<Guid> DeleteWeatherForecast(DeleteWeatherForecastRequest forecast)
+        {
+            try
+            {
+                var weatherForecastId = _mediator.Send(forecast);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet]
         [Route("GetWeeklyWeatherForecast")]
-        public IActionResult GetWeeklyWeatherForecast(GetWeeklyWeatherForecastRequest request)
+        public IActionResult GetWeeklyWeatherForecast([FromHeader] GetWeeklyWeatherForecastRequest request)
         {
             try
             {

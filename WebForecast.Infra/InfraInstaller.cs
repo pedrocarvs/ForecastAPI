@@ -20,7 +20,7 @@ namespace WeatherForecast.Infra
                 .Replace("{password}", options.Password);
 
             services.AddDbContext<WeatherForecastDbContext>(options =>
-                options.UseMySql(connectionString, ServerVersion.Parse("8.0.3")));
+                options.UseInMemoryDatabase(connectionString));
             
             return services;
         }

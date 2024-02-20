@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace WeatherForecast.Domain.Entities
 {
-    public interface IAggregate<T, Tkey> where T : IData<Tkey>
+    public enum ForecastState
     {
-        Tkey Id { get; }
-        bool IsDeleted { get; }
-        void Delete();
-        T GetData();
+        Created,
+        Deleted 
     }
 }

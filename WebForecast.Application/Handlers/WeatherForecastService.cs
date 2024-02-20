@@ -13,14 +13,36 @@ namespace WeatherForecast.Application.Handlers
            _forecastRepository = forecastRepository ?? throw new ArgumentNullException(nameof(forecastRepository));
         }
 
-        public async Task<CreateWeatherForecastResponse> CreateForecast(DateTime date, double temperature, CancellationToken cancellationToken) 
+        public async Task<CreateWeatherForecastResponse> Create(DateTime date, double temperature, Action<ForecastAggregate> action, CancellationToken cancellationToken) 
         {
             var forecastAggregate = new ForecastAggregate(date, temperature);
 
-            var response = await _forecastRepository.AddForecastAsync(forecastAggregate.GetData(), cancellationToken);
+            await Update(forecastAggregate, action);
 
-            return new(response.Id, response.Description);
+            var simpleForecast = forecastAggregate.getSimpleForecast();
+
+            return new(simpleForecast.Id, simpleForecast.Description);
         }
+
+        public async Task Update(Guid id, Action<ForecastAggregate> action, CancellationToken cancellationToken) 
+        {
+            var forecastAggregate = await _forecastRepository.GetForecastAsync(id);
+
+            await Update(forecastAggregate, action);
+        }
+
+        public async Task Update(ForecastAggregate forecast, Action<ForecastAggregate> action) 
+        {
+            try
+            {
+                action(forecast);
+                await _forecastRepository.SaveAsync(forecast);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.StackTrace);
+            }
+        } 
 
         public async Task<IEnumerable<ForecastData>> GetWeeklyForecastAsync(DateTime date, CancellationToken cancellationToken)
         {

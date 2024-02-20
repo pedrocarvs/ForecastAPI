@@ -1,6 +1,8 @@
-﻿namespace WeatherForecast.Application.Handlers
+﻿using MediatR;
+
+namespace WeatherForecast.Application.Handlers
 {
-    public record CreateWeatherForecastResponse
+    public record CreateWeatherForecastResponse : IRequest
     {
         public Guid _Id { get; set; }
         public string? _Description { get; set; }

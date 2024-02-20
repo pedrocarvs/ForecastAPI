@@ -9,7 +9,8 @@ namespace WeatherForecast.Domain.Repositories
 {
     public interface IWeatherForecastRepository
     {
-        Task<ForecastData> AddForecastAsync(ForecastData forecast, CancellationToken cancellationToken);
+        Task<ForecastAggregate> GetForecastAsync(Guid id);
         Task<List<ForecastData>> GetWeeklyForecastAsync(DateTime date, CancellationToken cancellationToken);
+        Task SaveAsync(ForecastAggregate forecast);
     }
 }

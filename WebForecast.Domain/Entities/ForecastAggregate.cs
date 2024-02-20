@@ -46,6 +46,7 @@ namespace WeatherForecast.Domain.Entities
                 Id = Guid.NewGuid(),
                 Created = DateTimeOffset.UtcNow,
                 Updated = DateTimeOffset.UtcNow,
+                State = ForecastState.Created,
                 Date = date,
                 Temperature = temperature,
                 Description = GetTemperatureDescription(temperature)
@@ -54,14 +55,23 @@ namespace WeatherForecast.Domain.Entities
             _forecasData = forecastData;
         }
 
-        public void Delete(DateTimeOffset? scheduledDeletionDate = null)
+        public void Delete()
         {
-            throw new NotImplementedException();
+            IsDeleted = true;
+        }
+        public void Create()
+        {
+            _forecasData.State = ForecastState.Created;
         }
 
         public ForecastData GetData()
         {
             return _forecasData;
+        }
+
+        public SimpleForecast getSimpleForecast() 
+        {
+            return new SimpleForecast(_forecasData.Id, _forecasData.Description!);
         }
 
         private string GetTemperatureDescription(double temperature)
