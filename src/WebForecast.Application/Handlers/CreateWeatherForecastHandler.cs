@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentValidation;
-using MediatR;
-using WeatherForecast.Domain.Entities;
-using WeatherForecast.Domain.Repositories;
+﻿using MediatR;
 
 namespace WeatherForecast.Application.Handlers
 {
@@ -21,7 +13,7 @@ namespace WeatherForecast.Application.Handlers
 
         public async Task<CreateWeatherForecastResponse> Handle(CreateWeatherForecastRequest request, CancellationToken cancellationToken)
         {
-           return await _service.Create(request.Date, request.Temperature, f => f.Create(), cancellationToken);
+           return await _service.Create(request.Date, request.Temperature, cancellationToken);
         }
     }
 }

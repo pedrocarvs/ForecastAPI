@@ -1,5 +1,6 @@
 ﻿
 
+using System.Threading;
 using WeatherForecast.Domain.Entities;
 using WeatherForecast.Domain.Repositories;
 
@@ -13,30 +14,30 @@ namespace WeatherForecast.Application.Handlers
            _forecastRepository = forecastRepository ?? throw new ArgumentNullException(nameof(forecastRepository));
         }
 
-        public async Task<CreateWeatherForecastResponse> Create(DateTime date, double temperature, Action<ForecastAggregate> action, CancellationToken cancellationToken) 
+        public async Task<CreateWeatherForecastResponse> Create(DateTime date, double temperature, CancellationToken cancellationToken) 
         {
             var forecastAggregate = new ForecastAggregate(date, temperature);
 
-            await Update(forecastAggregate, action);
+            await _forecastRepository.SaveAsync(forecastAggregate, cancellationToken);
 
-            var simpleForecast = forecastAggregate.getSimpleForecast();
+           var forecastData = forecastAggregate.GetData();
 
-            return new(simpleForecast.Id, simpleForecast.Description);
+            return new(forecastData.Id, forecastData.Description);
         }
 
         public async Task Update(Guid id, Action<ForecastAggregate> action, CancellationToken cancellationToken) 
         {
-            var forecastAggregate = await _forecastRepository.GetForecastAsync(id);
+            var forecastAggregate = await _forecastRepository.GetForecastAsync(id, cancellationToken);
 
-            await Update(forecastAggregate, action);
+            await Update(forecastAggregate, action, cancellationToken);
         }
 
-        public async Task Update(ForecastAggregate forecast, Action<ForecastAggregate> action) 
+        public async Task Update(ForecastAggregate forecast, Action<ForecastAggregate> action, CancellationToken cancellationToken) 
         {
             try
             {
                 action(forecast);
-                await _forecastRepository.SaveAsync(forecast);
+                await _forecastRepository.SaveAsync(forecast, cancellationToken);
             }
             catch (Exception ex)
             {

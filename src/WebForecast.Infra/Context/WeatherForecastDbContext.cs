@@ -1,8 +1,4 @@
-﻿
-
-using System.Reflection;
-using Microsoft.EntityFrameworkCore;
-using WeatherForecast.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace WeatherForecast.Infra.Context
 {

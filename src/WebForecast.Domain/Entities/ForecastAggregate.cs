@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace WeatherForecast.Domain.Entities
 {
     public class ForecastAggregate : IAggregate<ForecastData, Guid>
@@ -15,33 +10,17 @@ namespace WeatherForecast.Domain.Entities
         private readonly ForecastData _forecasData;
 
         public ForecastAggregate(ForecastData forecastData) 
-        { 
-            if (forecastData.Temperature < -60 || forecastData.Temperature > 60)
-            {
-                throw new ArgumentOutOfRangeException(nameof(forecastData.Temperature), "Temperature must be between -60 and 60 degrees.");
-            }
-
-            if (forecastData.Date < DateTime.Now)
-            {
-                throw new ArgumentException("ForecastData date cannot be the past.");
-            }
+        {
+            validateLogic(forecastData.Date, forecastData.Temperature);
 
             _forecasData = forecastData ?? throw new ArgumentNullException(nameof(forecastData));
         }
 
         public ForecastAggregate(DateTime date, double temperature)
         {
-            if (temperature < -60 || temperature > 60)
-            {
-                throw new ArgumentOutOfRangeException(nameof(temperature), "Temperature must be between -60 and 60 degrees.");
-            }
+            validateLogic(date, temperature);
 
-            if (date < DateTime.Now)
-            {
-                throw new ArgumentException("ForecastData date cannot be the past.");
-            }
-
-            var forecastData = new ForecastData
+             var forecastData = new ForecastData
             {
                 Id = Guid.NewGuid(),
                 Created = DateTimeOffset.UtcNow,
@@ -53,6 +32,19 @@ namespace WeatherForecast.Domain.Entities
             };
 
             _forecasData = forecastData;
+        }
+
+        private void validateLogic(DateTime date, double temperature) 
+        {
+            if (temperature < -60 || temperature > 60)
+            {
+                throw new ArgumentOutOfRangeException(nameof(temperature), "Temperature must be between -60 and 60 degrees.");
+            }
+
+            if (date < DateTime.Now)
+            {
+                throw new ArgumentException("ForecastData date cannot be the past.");
+            }
         }
 
         public void Delete()
@@ -69,32 +61,30 @@ namespace WeatherForecast.Domain.Entities
             return _forecasData;
         }
 
-        public SimpleForecast getSimpleForecast() 
-        {
-            return new SimpleForecast(_forecasData.Id, _forecasData.Description!);
-        }
-
         private string GetTemperatureDescription(double temperature)
         {
-            if (temperature <= -20) return "Freezing";
+            switch (temperature) 
+            {
+                case <= -20: return "Freezing";
 
-            else if (temperature < 0) return "Bracing";
+                case < 0: return "Bracing";
 
-            else if (temperature < 10) return "Chilly";
+                case < 10:  return "Chilly";
 
-            else if (temperature < 20) return "Cool";
+                case < 20: return "Cool";
 
-            else if (temperature < 25) return "Mild";
+                case  < 25:  return "Mild";
 
-            else if (temperature < 30) return "Warm";
+                case < 30:  return "Warm";
 
-            else if (temperature < 35) return "Balmy";
+                case < 35: return "Balmy";
 
-            else if (temperature < 40) return "Hot";
+                case < 40: return "Hot";
 
-            else if (temperature < 45) return "Sweltering";
+                case < 45: return "Sweltering";
 
-            else return "Scorching";
+                default: return "Scorching";
+            }
         }
     }
 }

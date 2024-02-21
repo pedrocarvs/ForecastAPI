@@ -21,8 +21,8 @@ namespace WeatherForecast.Api.Controllers
         {
             try
             {
-                var weatherForecastId = _mediator.Send(forecast);
-                return Ok(weatherForecastId);
+                var weatherForecastResponse = _mediator.Send(forecast);
+                return Ok(weatherForecastResponse);
             }
             catch (Exception ex)
             {
@@ -41,7 +41,7 @@ namespace WeatherForecast.Api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -57,7 +57,7 @@ namespace WeatherForecast.Api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
 
         }

@@ -1,11 +1,9 @@
-﻿using System.Reflection;
-using FluentValidation;
+﻿
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using WeatherForecast.Application.Handlers;
 using WeatherForecast.Domain.Entities;
-using WeatherForecast.Domain.Repositories;
-using WeatherForecast.Infra.WeatherForecast;
+
 
 namespace WeatherForecast.Application
 {

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using MediatR;
 using WeatherForecast.Domain.Entities;
-using WeatherForecast.Domain.Repositories;
 
 namespace WeatherForecast.Application.Handlers
 {

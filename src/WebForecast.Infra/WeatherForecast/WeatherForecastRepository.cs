@@ -16,9 +16,9 @@ namespace WeatherForecast.Infra.WeatherForecast
             _forecasts = _dbContext.Set<ForecastData>();
         }
 
-        public async Task<ForecastAggregate> GetForecastAsync(Guid id)
+        public async Task<ForecastAggregate> GetForecastAsync(Guid id, CancellationToken cancellationToken)
         {
-            var forecastData = await _forecasts.FirstOrDefaultAsync(d => d.Id.Equals(id));
+            var forecastData = await _forecasts.FirstOrDefaultAsync(d => d.Id.Equals(id), cancellationToken);
 
             return Inflate(forecastData!);
         }
@@ -35,7 +35,7 @@ namespace WeatherForecast.Infra.WeatherForecast
             return await _forecasts.Where(f => f.Date.Date >= startDate && f.Date.Date <= endDate.Date).ToListAsync(cancellationToken);
         }
 
-        public async Task SaveAsync(ForecastAggregate forecast)
+        public async Task SaveAsync(ForecastAggregate forecast, CancellationToken cancellationToken)
         {
             var forecastData = forecast.GetData();
 
@@ -50,7 +50,7 @@ namespace WeatherForecast.Infra.WeatherForecast
                 if (forecastData.State == ForecastState.Created) 
                 { 
                     forecastData.Created = DateTime.UtcNow;
-                   await _dbContext.AddAsync(forecastData);
+                   await _dbContext.AddAsync(forecastData, cancellationToken);
                 }
             }
            await _dbContext.SaveChangesAsync();
